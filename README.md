@@ -38,6 +38,7 @@ In case if sync repo has uncommitted modifications, script will exit with warnin
 ## How does it work
 
 Script makes next actions to sync up two repos:
+
 1. Fetch specified branch from left repo and right repo.
 2. Create sync branch based on right repo branch.
 3. Merge left repo branch, if merge conflict, stop for manual resolution.
