@@ -46,6 +46,17 @@ Script makes next actions to sync up two repos:
 5. Push sync branch to left repo.
 6. Remove sync branch.
 
+In case of merge conflict, then:
+
+1. Wait while conflict will be solved manually and commited.
+2. Fetch specified branch from left repo and right repo.
+3. Merge sync branch with right repo branch, if merge conflict, stop for manual resolution.
+4. Merge left repo branch, if merge conflict, stop for manual resolution.
+5. Push sync branch to right repo.
+6. Push sync branch to left repo.
+7. Remove sync branch.
+
+
 See below different cases.
 
 ### Already synced up
