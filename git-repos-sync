@@ -1,0 +1,52 @@
+#!/bin/bash
+
+if [ ! -d ".git" ]; then
+	echo "Git repo for syncronization is not found, creating one..."
+	git init
+	git fetch $1
+	git checkout -b master FETCH_HEAD	
+	echo
+fi
+
+if ! git diff-index --quiet HEAD --; then
+    >&2 echo "Local modifications found, looks like your in the conflict resolution. Resolve a conflict and commit. Then rerun script."
+    exit 1
+fi
+
+echo "Left: $1"
+echo "Right: $2"
+echo 
+echo "Fetch latest commits from branch $3 in $1"
+git fetch -u $1 $3:left/$3
+echo "Fetch latest commits from branch $3 in $2"
+git fetch -u $2 $3:right/$3 
+
+if git checkout --quiet -b sync-$3 right/$3; then
+	echo "Merge branches from left and right if necessary."
+	if ! git merge -m "Merge to sync between $1 and $2" --log left/$3; then
+                >&2 echo "Merge conflict. Solve is manually, commit and rerun script."
+                exit 1
+    fi
+else
+	echo "Rerun after merge conflict resolution."
+	echo "Try to merge with right first"
+	if ! git merge -m "Merge to sync between $1 and $2" --log right/$3; then
+                >&2 echo "Merge conflict. Solve is manually, commit and rerun script."
+                exit 1
+    fi
+	if ! git merge -m "Merge to sync between $1 and $2" --log left/$3; then
+                >&2 echo "Merge conflict. Solve is manually, commit and rerun script."
+                exit 1
+    fi
+fi
+
+echo "Push merged changes in $3 to $2"
+git push $2 HEAD:$3
+
+echo "Push merged changes in $3 to $1"
+git push $1 HEAD:$3
+
+git checkout --quiet master
+git branch -D --quiet sync-$3
+
+echo "Done."
