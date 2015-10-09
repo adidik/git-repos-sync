@@ -12,7 +12,7 @@ chmod +x git-repos-sync
 
 Just run the script with 3 parameters:
 * URL of first repository (left).
-* URL of secod repository (right).
+* URL of second repository (right).
 * Branch to sync up.
 
 ```
