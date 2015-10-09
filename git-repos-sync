@@ -39,6 +39,7 @@ if git checkout --quiet -b sync-$3 right/$3; then
     fi
 else
 	echo "Rerun after merge conflict resolution or restored connection."
+	git checkout --quiet sync-$3
 	echo "Try to merge with right first"
 	if ! git merge -m "Merge to sync between $1 and $2" --log right/$3; then
                 >&2 echo "Merge conflict. Solve is manually, commit and rerun script."
