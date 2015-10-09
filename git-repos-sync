@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$#" -ne 3 ]; then
+    >&2 echo "Usage: git-repos-sync <repository URL> <repository URL> <branch-to-sync>"
+    exit 1
+fi
+
 if [ ! -d ".git" ]; then
 	echo "Git repo for syncronization is not found, creating one..."
 	git init

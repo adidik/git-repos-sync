@@ -4,7 +4,7 @@
 
 ```
 mkdir <synchronization-folder>
-curl https://github.com/adidik/git-repos-sync/blob/master/git-repos-sync
+wget https://raw.githubusercontent.com/adidik/git-repos-sync/master/git-repos-sync
 chmod +x git-repos-sync
 ```
 
