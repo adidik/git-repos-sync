@@ -3,8 +3,15 @@
 ## Download
 
 ```
-mkdir <synchronization-folder>
+mkdir <synchronization-folder> && cd <synchronization-folder>
 wget https://raw.githubusercontent.com/adidik/git-repos-sync/master/git-repos-sync
+chmod +x git-repos-sync
+```
+or
+
+```
+mkdir <synchronization-folder> && cd <synchronization-folder>
+curl -O https://raw.githubusercontent.com/adidik/git-repos-sync/master/git-repos-sync
 chmod +x git-repos-sync
 ```
 
