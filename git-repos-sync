@@ -22,10 +22,15 @@ echo "Left: $1"
 echo "Right: $2"
 echo 
 echo "Fetch latest commits from branch $3 in $1"
-git fetch -u $1 $3:left/$3
+if ! git fetch -u $1 $3:left/$3; then 
+	>&2 echo "Fatal: unable to fetch from $1, rerun the script as soon as connnection restored."
+	exit 1
+fi 	
 echo "Fetch latest commits from branch $3 in $2"
-git fetch -u $2 $3:right/$3 
-
+if ! git fetch -u $2 $3:right/$3; then
+	>&2 echo "Fatal: unable to fetch from $2, rerun the script as soon as connnection restored."
+	exit 1
+fi
 if git checkout --quiet -b sync-$3 right/$3; then
 	echo "Merge branches from left and right if necessary."
 	if ! git merge -m "Merge to sync between $1 and $2" --log left/$3; then
@@ -33,7 +38,7 @@ if git checkout --quiet -b sync-$3 right/$3; then
                 exit 1
     fi
 else
-	echo "Rerun after merge conflict resolution."
+	echo "Rerun after merge conflict resolution or restored connection."
 	echo "Try to merge with right first"
 	if ! git merge -m "Merge to sync between $1 and $2" --log right/$3; then
                 >&2 echo "Merge conflict. Solve is manually, commit and rerun script."
@@ -46,10 +51,17 @@ else
 fi
 
 echo "Push merged changes in $3 to $2"
-git push $2 HEAD:$3
+if ! git push $2 HEAD:$3; then
+	>&2 echo "Fatal: unable to push to $2, rerun the script as soon as connection restored."
+	exit 1
 
+fi	
 echo "Push merged changes in $3 to $1"
-git push $1 HEAD:$3
+if ! git push $1 HEAD:$3; then
+	>&2 echo "Fatal: unable to push to $1, rerun the script as soon as connection restored."
+	exit 1
+
+fi	
 
 git checkout --quiet master
 git branch -D --quiet sync-$3
